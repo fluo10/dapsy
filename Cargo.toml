@@ -1,0 +1,15 @@
+[package]
+name = "dapsy"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.19"
+clap = { version = "3.0.14", features = ["derive"] }
+dirs = "4.0.0"
+regex = "1.5"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.5.8"
+walkdir = "2.3.2"
