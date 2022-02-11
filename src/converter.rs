@@ -7,6 +7,7 @@ pub enum ConvertOption {
     OverWrite,
     DryRun,
 }
+
 pub fn convert_to_mp3(src: &impl AsRef<Path>, dst: &impl AsRef<Path>) -> Result<()> {
     let src_path: &Path = src.as_ref();
     let dst_path: &Path = dst.as_ref();

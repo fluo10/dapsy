@@ -5,6 +5,8 @@ use clap::{Args,ArgGroup,Parser, Subcommand};
 use std::path::PathBuf;
 pub use args::GlobalArgs;
 use cmd::MainSubcommand;
+use crate::Library;
+use crate::Config;
 
 
 #[derive(Parser)]
@@ -18,6 +20,10 @@ use cmd::MainSubcommand;
 pub struct MainCommand {
     #[clap(short, group = "test")]
     preset: bool,
+    //#[clap(short, long)]
+    //config: Option<PathBuf>,
+    #[clap(short='n', long)]
+    dry_run: bool,
     #[clap()]
     source: Option<PathBuf>,
     #[clap()]
@@ -34,10 +40,17 @@ impl MainCommand {
             x.run();
             ()
         };
+        Config{
+            dry_run: self.dry_run,
+            ..Config::default()
+        }.globalize();
         let src = self.source.as_ref().unwrap();
-        let dst = self.destination.as_ref().unwrap().clone();
+        let dst = self.destination.as_ref().unwrap();
+        let mut src_library = Library::from_dir(src).unwrap();
+        let mut dst_library = Library::from_dir(dst).unwrap();
+        src_library.sync_tracks_with(&mut dst_library);
         println!("Convert {} to {}", src.to_str().unwrap(), dst.to_str().unwrap());
-
+        
     }
 }
 

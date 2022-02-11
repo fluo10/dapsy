@@ -4,15 +4,26 @@ use std::time::SystemTime;
 use crate::converter::convert_to_mp3;
 use crate::config::Config;
 use chrono::{DateTime, Utc};
+use std::default::Default;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 
 #[derive(Clone)]
 pub struct Track {
-    abs_path: PathBuf,
-    rel_path: PathBuf,
-    modified: SystemTime,
+    pub abs_path: PathBuf,
+    pub rel_path: PathBuf,
+    pub modified: SystemTime,
+}
+
+impl Default for Track {
+    fn default() -> Self {
+        Self{
+            abs_path: PathBuf::new(),
+            rel_path: PathBuf::new(),
+            modified: SystemTime::now(),
+        }
+    }
 }
 
 impl Track {

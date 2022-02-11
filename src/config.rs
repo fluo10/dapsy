@@ -8,16 +8,18 @@ static INSTANCE: OnceCell<Config> = OnceCell::new();
 
 #[derive(Debug)]
 pub struct Config {
-    lossy_formats: HashSet<String>,
-    lossless_formats: HashSet<String>,
-    audio_formats: HashSet<String>,
-    presets: HashMap<String,Preset>,
+    pub lossy_formats: HashSet<String>,
+    pub lossless_formats: HashSet<String>,
+    pub audio_formats: HashSet<String>,
+    pub presets: HashMap<String,Preset>,
+    pub dry_run: bool,
+    pub verbose: bool,
 }
 #[derive(Debug)]
 pub struct Preset {
-    src_path: PathBuf,
-    dst_path: PathBuf,
-    playlist_dir: Option<PathBuf>,
+    pub src_path: PathBuf,
+    pub dst_path: PathBuf,
+    pub playlist_dir: Option<PathBuf>,
 }
 impl Config {
     pub fn global() -> &'static Config {
@@ -41,6 +43,8 @@ impl Default for Config {
             lossless_formats: lossless_formats,
             audio_formats: audio_formats,
             presets: HashMap::new(),
+            dry_run: false,
+            verbose: false,
         }
         
     }
