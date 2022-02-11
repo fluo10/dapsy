@@ -7,8 +7,11 @@ mod library;
 
 pub use track::Track;
 pub use library::Library;
+use cli::MainCommand;
+use clap::Parser;
 
 
 fn main() {
-    println!("Hello, world!");
+    let command = MainCommand::parse();
+    command.run();
 }

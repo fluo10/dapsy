@@ -9,7 +9,7 @@ pub struct TrackConvertCommand {
 }
 
 impl TrackConvertCommand{
-    pub fn run() {
-        
+    pub fn run(&self) {
+        println!("Run track convert");
     }
 }
