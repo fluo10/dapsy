@@ -1,22 +1,32 @@
 use std::collections::{HashMap,HashSet};
 use std::path::PathBuf;
+use once_cell::sync::OnceCell;
 
+type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
+static INSTANCE: OnceCell<Config> = OnceCell::new();
+
+#[derive(Debug)]
 pub struct Config {
     lossy_formats: HashSet<String>,
     lossless_formats: HashSet<String>,
     audio_formats: HashSet<String>,
     presets: HashMap<String,Preset>,
-
-    
 }
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
+#[derive(Debug)]
 pub struct Preset {
     src_path: PathBuf,
     dst_path: PathBuf,
     playlist_dir: Option<PathBuf>,
 }
-
+impl Config {
+    pub fn global() -> &'static Config {
+        INSTANCE.get().expect("Config is not initialized")
+    }
+    pub fn globalize(self) {
+        INSTANCE.set(self).unwrap();
+    }
+}
 impl Default for Config {
     fn default() -> Config {
         const LOSSY_FORMATS: &str = "mp3,aac";
