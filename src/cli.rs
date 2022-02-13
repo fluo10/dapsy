@@ -50,7 +50,6 @@ impl MainCommand {
         let mut dst_library = Library::from_dir(dst).unwrap();
         src_library.sync_tracks_with(&mut dst_library);
         println!("Convert {} to {}", src.to_str().unwrap(), dst.to_str().unwrap());
-        
     }
 }
 
