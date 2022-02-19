@@ -1,3 +1,9 @@
+mod entry;
+mod entries;
+
+pub use entry::PlaylistEntry;
+pub use entries::PlaylistEntries;
+
 use chrono::{DateTime, Utc};
 use once_cell::sync::OnceCell;
 use regex::Regex;
@@ -7,14 +13,13 @@ use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use super::track::Track;
 
-static BLANK_RE: OnceCell<Regex> = OnceCell::new();
-static EXT_RE: OnceCell<Regex> = OnceCell::new();
 
 pub struct Playlist {
     pub path: PathBuf,
     pub last_updated: DateTime<Utc>,
     pub raw: String,
     pub tracks: Vec<PathBuf>,
+    pub entries: PlaylistEntries,
 }
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
@@ -26,6 +31,7 @@ impl Default for Playlist {
             last_updated: Utc::now(),
             raw: String::new(),
             tracks: Vec::new(),
+            entries: PlaylistEntries::default(),
         }
     }
 }
@@ -34,26 +40,17 @@ impl Playlist{
     pub fn new() -> Self {
         Default::default()
     }
-    pub fn from(path: &impl AsRef<Path>) -> Self {
+    fn from_file(path: &impl AsRef<Path>) -> Result<Self> {
         let mut playlist: Playlist = Playlist::new();
         playlist.path = path.as_ref().to_path_buf();
         playlist.read();
-        playlist
-    } 
+        Ok(playlist)
+    }
     pub fn read(&mut self){
-        const EXT_PATTERN:&str = r##"(?m)^[^# ].*$"##;
-        EXT_RE.get_or_try_init(|| Regex::new(EXT_PATTERN)).unwrap();
-        const BLANK_PATTERN:&str = r##"^\s.*"##;
-        BLANK_RE.get_or_try_init( || Regex::new(BLANK_PATTERN)).unwrap();
-
+     
         let f = File::open(&self.path).unwrap();
-        let mut reader = BufReader::new(f);
-        for line in reader.lines(){
-            let line = line.unwrap();
-            if EXT_RE.get().unwrap().is_match(&line) {
-                self.tracks.push(PathBuf::from(&line));
-            }
-        }
+        
+        self.entries = PlaylistEntries::read(f);
     }
     pub fn write(&self) {
         let file;
@@ -83,4 +80,16 @@ impl Playlist{
     pub fn check(&self) -> Result<()>{
         todo!();
     }
+}
+
+pub struct PlaylistContent {
+
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn parser(){}
+
 }
