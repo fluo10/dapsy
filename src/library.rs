@@ -2,7 +2,7 @@ use super::Track;
 use crate::playlist::Playlist;
 use crate::Config;
 use crate::converter::convert_to_mp3;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ffi::OsStr;
 use std::path::{Path,PathBuf};
 
@@ -63,8 +63,8 @@ impl Library {
 
     }
     pub fn sync_tracks_with(&self, other: &mut Library) {
-
-        for (key, src_track) in self.tracks.iter() {
+        let keys = self.tracks.keys().
+        for (key, src_track) in self.tracks.iter().sort_by(|k, s|, ) {
             let dst_track: &Track;
             if !other.tracks.contains_key(key) {
                 other.add_track_with_rel_path(&src_track.rel_path.with_extension("mp3"));

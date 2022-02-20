@@ -1,6 +1,7 @@
 use std::path::{Path,PathBuf};
 use std::process::Command;
 use std::fs::create_dir_all;
+use std::io::{stdout, stderr, Write};
 use crate::Config;
 
 use anyhow::Result;
@@ -26,8 +27,8 @@ pub fn convert_to_mp3(src: &impl AsRef<Path>, dst: &impl AsRef<Path>) -> Result<
             "-f", "mp3",
             "-q:a", "6",
             dst_path.to_str().unwrap()]).output()?;
-        if !output.status.success() {
-        }
+        stdout().write_all(&output.stdout).unwrap();
+        stderr().write_all(&output.stderr).unwrap();
         Ok(())
     }
 }

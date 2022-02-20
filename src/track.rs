@@ -49,11 +49,14 @@ impl Track {
         let config = Config::global();
         if other.abs_path.is_file() {
             if self.modified > other.modified {
+                println!("Convert {:?} to existing file", &self.rel_path);
                 return convert_to_mp3(&self.abs_path, &other.abs_path)
             } else {
+                println!("Skip {:?} (Destination is newer)", &self.rel_path);
                 Ok(())
             }
         } else if !other.abs_path.exists() {
+            println!("Convert {:?} to new file", &self.rel_path);
             convert_to_mp3(&self.abs_path, &other.abs_path)
         } else {
             Ok(())
