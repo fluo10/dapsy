@@ -1,16 +1,16 @@
+use anyhow::Result;
 use chrono::{DateTime, Utc};
 use std::path::{Path,PathBuf};
 use std::collections::HashMap;
 use super::track::Track;
+
+
 
 pub struct Playlist {
     path: PathBuf,
     last_updated: DateTime<Utc>,
     tracks: Vec<Track>,
 }
-
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
 
 impl Playlist{
     pub fn new() -> Self {

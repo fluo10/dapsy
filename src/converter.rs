@@ -3,7 +3,7 @@ use std::process::Command;
 use std::fs::create_dir_all;
 use crate::Config;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+use anyhow::Result;
 
 pub enum ConvertOption {
     OverWrite,

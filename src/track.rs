@@ -3,10 +3,10 @@ use std::path::{Path,PathBuf};
 use std::time::SystemTime;
 use crate::converter::convert_to_mp3;
 use crate::config::Config;
+use anyhow::Result;
 use chrono::{DateTime, Utc};
 use std::default::Default;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 
 #[derive(Clone)]

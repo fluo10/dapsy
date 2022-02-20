@@ -1,8 +1,9 @@
 use std::collections::{HashMap,HashSet};
 use std::path::PathBuf;
+
+use anyhow::Result;
 use once_cell::sync::OnceCell;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 static INSTANCE: OnceCell<Config> = OnceCell::new();
 

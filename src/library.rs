@@ -5,10 +5,11 @@ use crate::converter::convert_to_mp3;
 use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::path::{Path,PathBuf};
+
+use anyhow::Result;
 use walkdir::WalkDir;
 use std::default::Default;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Default)]
 pub struct Library {
