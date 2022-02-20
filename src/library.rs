@@ -88,7 +88,7 @@ impl Library {
                 }
             };
 
-            convert_to_mp3(&src_track.abs_path, &dst_track.abs_path).unwrap_or_else(|e| eprintln!("Error occured {}", e));
+            src_track.sync_to(&dst_track);
         }
     }
     pub fn add_track_with_rel_path(&mut self, path: &impl AsRef<Path>) {

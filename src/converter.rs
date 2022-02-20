@@ -27,8 +27,8 @@ pub fn convert_to_mp3(src: &impl AsRef<Path>, dst: &impl AsRef<Path>) -> Result<
             "-f", "mp3",
             "-q:a", "6",
             dst_path.to_str().unwrap()]).output()?;
-        stdout().write_all(&output.stdout).unwrap();
-        stderr().write_all(&output.stderr).unwrap();
+        //stdout().write_all(&output.stdout).unwrap();
+        //stderr().write_all(&output.stderr).unwrap();
         Ok(())
     }
 }
