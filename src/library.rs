@@ -46,9 +46,9 @@ impl Library {
         let base_path = rel_path.with_extension("");
         if let Some(extension) = abs_path.extension(){
             match extension.to_str() {
-                Some("m3u") => {
-                    self.playlists.insert(base_path,Playlist::new());
-                },
+                //Some("m3u") => {
+                //    self.playlists.insert(base_path,Playlist::new());
+                //},
                 Some("flac") | Some("mp3") => {
                     self.tracks.insert(base_path, Track::from_file(&self.path, &abs_path).unwrap());
                 },
@@ -63,20 +63,32 @@ impl Library {
 
     }
     pub fn sync_tracks_with(&self, other: &mut Library) {
-        let keys = self.tracks.keys().
-        for (key, src_track) in self.tracks.iter().sort_by(|k, s|, ) {
+        let src_keys: HashSet<PathBuf> = self.tracks.keys().cloned().into_iter().collect();
+        let dst_keys: HashSet<PathBuf> = other.tracks.keys().cloned().into_iter().collect();
+        let mut whole_keys: Vec<PathBuf> = src_keys.union(&dst_keys).cloned().collect();
+        whole_keys.sort();
+        for key in whole_keys.iter() {
+
+            let src_track: &Track;
             let dst_track: &Track;
-            if !other.tracks.contains_key(key) {
-                other.add_track_with_rel_path(&src_track.rel_path.with_extension("mp3"));
-                dst_track = other.tracks.get(key).unwrap();
-                convert_to_mp3(&src_track.abs_path, &dst_track.abs_path).unwrap_or_else(|e| eprintln!("Error occured {}", e));
-            } else {
-                dst_track = other.tracks.get(key).unwrap();
-            println!("Convert from {} to {}", src_track.abs_path.to_str().unwrap(), dst_track.abs_path.to_str().unwrap());
-            }
-        }
-        if Config::global().dry_run {
-            println!("Dry run");
+            match (self.tracks.get(key), other.tracks.get(key)) {
+                (None, None) => panic!(),
+                (None, Some(d)) => {
+                    println!("Delete {:?}(unimplimented)", key);
+                    continue;
+                },
+                (Some(s), None) => {
+                    src_track = s;
+                    other.add_track_with_rel_path(&src_track.rel_path.with_extension("mp3"));
+                    dst_track = other.tracks.get(key).unwrap();
+                },
+                (Some(s), Some(d)) => {
+                    src_track = s;
+                    dst_track = d;
+                }
+            };
+
+            convert_to_mp3(&src_track.abs_path, &dst_track.abs_path).unwrap_or_else(|e| eprintln!("Error occured {}", e));
         }
     }
     pub fn add_track_with_rel_path(&mut self, path: &impl AsRef<Path>) {
@@ -87,6 +99,15 @@ impl Library {
             abs_path: self.path.join(path),
             ..Track::default()
         });
+    }
+    pub fn get_track_with_rel_path(&self, path: &impl AsRef<Path>) -> Track {
+        let path: PathBuf = path.as_ref().to_path_buf();
+        assert!(path.is_relative());
+        Track{
+            rel_path: path.clone(),
+            abs_path: self.path.join(path),
+            ..Track::default()
+        }
     }
     pub fn get_relative_path(path: &impl AsRef<Path>) -> PathBuf {
         todo!();
