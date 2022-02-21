@@ -26,6 +26,7 @@ pub fn convert_to_mp3(src: &impl AsRef<Path>, dst: &impl AsRef<Path>) -> Result<
         let output = Command::new("ffmpeg").args(["-i", src_path.to_str().unwrap(),
             "-f", "mp3",
             "-q:a", "6",
+            "-y",
             dst_path.to_str().unwrap()]).output()?;
         //stdout().write_all(&output.stdout).unwrap();
         //stderr().write_all(&output.stderr).unwrap();
